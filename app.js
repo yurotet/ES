@@ -21,7 +21,7 @@ Ext.regApplication({
     // tabletStartupScreen: 'resources/images/tablet_startup.png',
        
     launch: function() {
-        this.viewport = new zialer.views.Entry({
+        this.viewport = new zialer.views.Viewport({
             // configurations of the app.
             application: this,
         });
