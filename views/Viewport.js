@@ -57,9 +57,9 @@ zialer.views.Viewport = Ext.extend(Ext.TabPanel, {
 								}
 							}
 						},
-						{ 
-							//TDOO:: implement tiem list panel
-							// xtype: 'itemList'
+						{ 							
+							xtype: 'itemList'
+							// TODO:: list ocnfigrations here
 						}						
 					]							
 				},
