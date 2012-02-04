@@ -1,6 +1,5 @@
 zialer.views.Viewport = Ext.extend(Ext.TabPanel, {
-	id: 'viewport',
-	layout: 'card',
+	id: 'viewport',	
 	fullscreen: true,
 	ui: 'plain',
 	cardSwitchAnimation: false,
@@ -10,7 +9,7 @@ zialer.views.Viewport = Ext.extend(Ext.TabPanel, {
 		// will not be added as the instance of xtype:tab.
 		var cmpToInsert = (cmp instanceof Ext.Spacer)? {xtype: 'spacer'} : {
 			xtype: 'tab',
-			cls: cmp.tabCls || '',
+			cls: cmp.tabCls || 'item-tab',
 			card: cmp
 		};
 		this.tabBar.insert(idx, cmpToInsert);
@@ -19,50 +18,68 @@ zialer.views.Viewport = Ext.extend(Ext.TabPanel, {
 
 	initComponent: function() {
 		Ext.apply(this, {			
-			items:[				
+			items:[
+
+				/**
+				 * ========
+				 * Logo tab
+				 * ========
+				 */			
 				{
 					// TODO:: this needs to be replaced with logo image or text.
 					title: (new Date()).getFullYear(),
 					tabCls: 'logo-tab'
 				},
+				
+				// a spacer tab push all other functional tabs to the right.
 				{
 					xtype: 'spacer'
 				},
+
+				/**
+				 * ==========
+				 * Search tab
+				 * ==========
+				 */
 				{
 					// TODO:: this will be replaced with search icon
 					title: 'serch',
-					tabCls: 'search-tab',
+					tabCls: 'search-tab',					
+					layout: 'fit',							
 
-					items: [
-						{
-							xtype: 'form',
-							styleHtmlContent: true,
+					items: {
+						xtype: 'itemList'
+					},
 
-							listeners: {
-								el: {
-									scope: this,
-									submit: this.onQuerySubmit
-								}
-							},
+					dockedItems: {
+						dock: 'top',
+						xtype: 'form',
+						height: 40,
+						baseCls: 'x-toolbar',
+						cls: 'search-form',
+						itemId: 'search-from',
 
-							dockedItems: {
-								xtype: 'toolbar',
-								ui: 'plain',
-								dock: 'top',
-								items: {
-									xtype: 'searchfield',			                    
-				                    name: 'query',
-				                    itemId: 'newQueryField',
-				                    placeHolder: 'zialer zialer...'
-								}
+						listeners: {
+							el: {
+								scope: this,
+								submit: this.onQuerySubmit
 							}
 						},
-						{ 							
-							xtype: 'itemList'
-							// TODO:: list ocnfigrations here
-						}						
-					]							
+
+						items: {
+							xtype: 'searchfield',			                    
+							name: 'query',
+							itemId: 'newQueryField',
+							placeHolder: 'zialer zialer...'
+						}
+					}
 				},
+
+				/**
+				 * ==============
+				 * Collection tab
+				 * ==============
+				 */
 				{
 					// TDOO:: this will bed replaced with collection icon
 					title: 'coll',
