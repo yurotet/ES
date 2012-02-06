@@ -1,0 +1,30 @@
+#!/usr/bin/env node
+var fs = require('fs');
+var less = require('less');
+
+var INPUT = "app.less";
+var OUTPUT = "../app.css";
+
+var checkError = function(message, err) {
+	if(err) {
+		console.error(message + ": %s",err);
+		process.exit(1);
+	}
+}
+
+fs.readFile(INPUT,function(err,data) {
+	checkError("could not read file " + INPUT, err);
+
+	var parser = new(less.Parser);
+	var css = "";
+	parser.parse(data.toString(), function (err, tree) {
+		checkError("failed to process " + INPUT, err);
+		css = tree.toCSS({ compress: true });
+	});
+	
+	fs.writeFile(OUTPUT, css, function(err) {
+		checkError("could not write to file " + OUTPUT, err);
+		console.log('new css generated!');
+	});
+	
+});
