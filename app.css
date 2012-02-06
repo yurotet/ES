@@ -1,1 +1,2 @@
-
+.item-panel.active,.action-panel.active{visibility:visible;}
+.item-panel.deactive,.action-panel.deactive{visibility:hidden;}

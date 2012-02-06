@@ -50,7 +50,7 @@ zialer.views.ItemList = Ext.extend(Ext.List, {
 
 	getItemTpl: function() {
 		var tpl = [
-			'<div class="item-panel">',
+			'<div class="item-panel active">',
 				'<div>{query}</div>',
 			'</div>'
 		];
@@ -73,7 +73,7 @@ zialer.views.ItemList = Ext.extend(Ext.List, {
 					'</div>';			
 		});
 		
-		var tpl = ['<div class="action-panel x-layout-box-inner x-layout-box" style="display:none">'].concat(templates).concat(['</div>']);		
+		var tpl = ['<div class="action-panel deactive x-layout-box-inner x-layout-box">'].concat(templates).concat(['</div>']);		
 		return tpl;
 	},
 	
@@ -81,23 +81,61 @@ zialer.views.ItemList = Ext.extend(Ext.List, {
 		var el = Ext.get(node);
 		var itemEl = el.down('.item-panel');
 		var actionEl = el.down('.action-panel');
+		
+		/**
+		 * The list item body should either have item panel
+		 * or action panel displayed, therefore, we swipe to
+		 * toggle visibility of the two panels.
+		 */
+		var toggleCfg = {};
+		toggleCfg.animStyle = 'slide';
 
-		Ext.Anim.run(actionEl, 'slide', {
-			direction: 'left',
-			scope: this,			 
-			out: false,
+		if (actionEl.hasCls('deactive')) {
+			toggleCfg.dismissEl = itemEl;
+			toggleCfg.showEl = actionEl;
+			toggleCfg.direction = 'left';
+		}
+		else if (itemEl.hasCls('deactive')) {			
+			toggleCfg.dismissEl = actionEl;
+			toggleCfg.showEl = itemEl;
+			toggleCfg.direction = 'right';
+		}
 
-			after: function() {	
-				// actionEl.setStyle('display','block');			
-				itemEl.hide();
-				console.log('elent hided');
-			}
-		});
+		// TODO:: we might need to reset all other list items 
+		// to show item information
 
+		this.togglePanelVisibility(toggleCfg);		
+	},
+
+	//@private
+	// use slide animination 
+	togglePanelVisibility: function(config) {
+		config = config || {};
+				
+		var showEl = config.showEl,
+			dismissEl = config.dismissEl,
+			animStyle = config.animStyle,
+			direction = config.direction;
+
+		if (showEl && dismissEl) {				
+			Ext.Anim.run(dismissEl, animStyle, {
+				direction: direction,
+				out: true,
+				scope: this,
+				after: function() {
+					showEl.removeCls('deactive');
+					showEl.addCls('active');
+					dismissEl.removeCls('active');
+					dismissEl.addCls('deactive');
+				}
+			});	
+		}
 	},
 
 	onItemTap: function(item, index, e) {
-		console.log('tapped on ' + index);
+		var tappedEl = e.getTarget('.action-item');
+		console.log(tappedEl);
+		//TDOO:: dispathc the serice heer
 	}
 });
 
